@@ -1,26 +1,55 @@
-import React from "react";
+import React, { useState } from "react";
 
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
-
-//create your first component
 const Home = () => {
+	const [inputValue, setInputValue] = useState('');
+	const [todos, setTodos] = useState([]); // creamos un array para las tareas
+
+	const contador = () => {
+		if (todos.length == 0) {
+			return "No hay tareas";
+		} else if (todos.length == 1) {
+			return "Te queda la última tarea";
+		} else {
+			return `Te quedan ${todos.length} tareas`;
+		}
+	}
+
 	return (
-		<div className="text-center">
-			<h1 className="text-center mt-5">Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working...
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
+		<div className="container mt-5">
+			<h1 className="text-center">My To Do's</h1>
+			<ul className="m-auto">
+				<li>
+					<input
+						type="text"
+						placeholder="Add To Do"
+						onChange={(e) => setInputValue(e.target.value)}
+						value={inputValue}
+						onKeyPress={(e) => {
+							if (e.key === "Enter" && inputValue !== '') { // chequeamos que el input no este vacio
+								setTodos(todos.concat(inputValue));
+								setInputValue('');
+							}
+						}}
+					/>
+				</li>
+				{todos.map((t, index) => (
+					<li key={index}>
+						{t}
+						<i
+							className="fas fa-times text-danger todo-icon"
+							onClick={() =>
+								setTodos(todos.filter((t, currentIndex) => index !== currentIndex))
+							}
+
+						></i>
+					</li>
+				))}
+				<div>{contador()}</div>
+			</ul>
 		</div>
 	);
 };
 
 export default Home;
+
+
